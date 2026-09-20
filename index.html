@@ -875,13 +875,23 @@ content.addEventListener('click', e=>{
   if(e.target.closest('#startBtn')) go(1);
 });
 
-let touchStartX = null;
-content.addEventListener('touchstart', e=>{ touchStartX = e.touches[0].clientX; }, {passive:true});
+let touchStartX = null, touchStartY = null, touchStartScrollTop = 0;
+content.addEventListener('touchstart', e=>{
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  touchStartScrollTop = content.scrollTop;
+}, {passive:true});
 content.addEventListener('touchend', e=>{
   if(touchStartX===null) return;
   const dx = e.changedTouches[0].clientX - touchStartX;
-  if(Math.abs(dx) > 60){ if(dx < 0) go(current+1); else go(current-1); }
-  touchStartX = null;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const scrolled = Math.abs(content.scrollTop - touchStartScrollTop) > 4;
+  // only treat as a page-swipe when the gesture is clearly horizontal
+  // and the content area itself didn't scroll vertically during the touch
+  if(!scrolled && Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8){
+    if(dx < 0) go(current+1); else go(current-1);
+  }
+  touchStartX = null; touchStartY = null;
 }, {passive:true});
 
 window.addEventListener('keydown', e=>{
