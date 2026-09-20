@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>加拿大東部十九日</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F1EA;
+    --paper-raised:#FFFFFF;
+    --ink:#1D2321;
+    --ink-soft:rgba(29,35,33,.62);
+    --ink-faint:rgba(29,35,33,.38);
+    --line:rgba(29,35,33,.13);
+    --accent:#B14328;
+    --accent-soft:rgba(177,67,40,.09);
+    --accent-ink:#FFFFFF;
+    --shadow: 0 1px 2px rgba(29,35,33,.06);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper:#15181A;
+      --paper-raised:#1D2224;
+      --ink:#EDEBE4;
+      --ink-soft:rgba(237,235,228,.64);
+      --ink-faint:rgba(237,235,228,.38);
+      --line:rgba(237,235,228,.14);
+      --accent:#E07A5A;
+      --accent-soft:rgba(224,122,90,.14);
+      --accent-ink:#1A1310;
+      --shadow: 0 1px 2px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#15181A;
+    --paper-raised:#1D2224;
+    --ink:#EDEBE4;
+    --ink-soft:rgba(237,235,228,.64);
+    --ink-faint:rgba(237,235,228,.38);
+    --line:rgba(237,235,228,.14);
+    --accent:#E07A5A;
+    --accent-soft:rgba(224,122,90,.14);
+    --accent-ink:#1A1310;
+    --shadow: 0 1px 2px rgba(0,0,0,.3);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans TC","Noto Sans",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  .serif{ font-family:"Noto Serif TC","Noto Serif",serif; }
+
+  .app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    background:var(--paper);
+  }
+
+  .masthead{ padding:22px 20px 14px; border-bottom:1px solid var(--line); }
+  .masthead .kicker{ font-size:11px; letter-spacing:.06em; color:var(--ink-faint); margin-bottom:4px; }
+  .masthead h1{ margin:0; font-size:22px; font-weight:600; letter-spacing:.01em; }
+  .masthead .range{ margin-top:3px; font-size:13px; color:var(--ink-soft); }
+
+  .rail-wrap{ position:sticky; top:0; z-index:20; background:var(--paper); border-bottom:1px solid var(--line); }
+  .rail{ display:flex; gap:6px; overflow-x:auto; padding:10px 14px; scrollbar-width:none; }
+  .rail::-webkit-scrollbar{display:none;}
+  .pill{
+    flex:0 0 auto; border:1px solid var(--line); background:var(--paper-raised); color:var(--ink-soft);
+    border-radius:10px; padding:6px 11px; font-size:12.5px; line-height:1.25; text-align:center;
+    cursor:pointer; user-select:none; transition:border-color .15s ease, color .15s ease, background .15s ease; white-space:nowrap;
+  }
+  .pill .p-num{ display:block; font-size:9.5px; letter-spacing:.05em; color:var(--ink-faint); margin-bottom:1px;}
+  .pill.active{ border-color:var(--accent); color:var(--ink); background:var(--accent-soft); }
+  .pill.active .p-num{ color:var(--accent); }
+
+  .subnav{ display:flex; align-items:center; justify-content:space-between; padding:8px 16px 10px; gap:10px; }
+  .navbtn{
+    border:1px solid var(--line); background:var(--paper-raised); color:var(--ink);
+    width:34px;height:34px; border-radius:9px; display:flex;align-items:center;justify-content:center; cursor:pointer; flex:0 0 auto;
+  }
+  .navbtn:disabled{ opacity:.3; cursor:default; }
+  .navbtn svg{ width:16px; height:16px; }
+  .progress-text{ font-size:12px; color:var(--ink-faint); text-align:center; flex:1; }
+
+  .content{ flex:1; padding:6px 18px 60px; }
+  .page{ animation:fade .22s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+
+  .day-head{ padding:14px 0 10px; }
+  .day-head .d-num{ font-size:13px; color:var(--accent); font-weight:600; letter-spacing:.04em; }
+  .day-head h2{ margin:2px 0 4px; font-size:26px; font-weight:600; line-height:1.15; }
+  .day-head .d-meta{ font-size:13px; color:var(--ink-soft); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .tag{ display:inline-block; font-size:11px; padding:2px 8px; border-radius:100px; background:var(--accent-soft); color:var(--accent); font-weight:600; }
+  .tag.plain{ background:transparent; border:1px solid var(--line); color:var(--ink-soft); font-weight:500; }
+
+  .ticket{ border:1px solid var(--line); border-radius:14px; background:var(--paper-raised); padding:14px 16px; margin:10px 0 16px; box-shadow:var(--shadow); }
+  .ticket-row{ display:flex; align-items:center; gap:10px; }
+  .ticket-icon{ width:30px;height:30px; border-radius:8px; background:var(--accent-soft); color:var(--accent); display:flex;align-items:center;justify-content:center; flex:0 0 auto; }
+  .ticket-icon svg{ width:16px;height:16px; }
+  .ticket-main{ flex:1; min-width:0; }
+  .ticket-main .t-title{ font-size:14.5px; font-weight:600; }
+  .ticket-main .t-sub{ font-size:12px; color:var(--ink-soft); margin-top:1px; }
+  .ticket-extra{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); font-size:12.5px; color:var(--ink-soft); line-height:1.6; }
+  .ticket-extra ul{ margin:0; padding-left:18px; }
+  .ticket-extra li{ margin-bottom:4px; }
+
+  /* time / place table */
+  table.ttable{ width:100%; border-collapse:collapse; margin-top:10px; }
+  table.ttable td{ padding:7px 4px; border-top:1px solid var(--line); vertical-align:top; font-size:13px; line-height:1.5; }
+  table.ttable tr:first-child td{ border-top:none; padding-top:2px; }
+  table.ttable td.tt-time{ width:52px; white-space:nowrap; color:var(--accent); font-weight:700; font-variant-numeric:tabular-nums; padding-right:10px; }
+  table.ttable td.tt-place{ font-weight:600; color:var(--ink); }
+  table.ttable td.tt-text{ color:var(--ink-soft); }
+  .leg-caption{ margin-top:8px; font-size:11.5px; color:var(--ink-faint); }
+
+  section.block{ margin-bottom:20px; }
+  section.block h3{ font-size:12px; font-weight:700; letter-spacing:.03em; color:var(--ink-faint); margin:0 0 8px; display:flex; align-items:center; gap:6px; }
+  section.block h3 svg{ width:13px;height:13px; opacity:.75; }
+  .list{ margin:0; padding:0; list-style:none; }
+  .list li{ position:relative; padding-left:14px; margin-bottom:8px; font-size:14px; line-height:1.55; color:var(--ink); }
+  .list li::before{ content:""; position:absolute; left:0; top:8px; width:4px;height:4px; border-radius:50%; background:var(--accent); }
+  a.maplink{ color:var(--ink); text-decoration:none; border-bottom:1px dotted var(--accent); padding-bottom:1px; }
+  a.maplink:active{ opacity:.7; }
+  a.maplink svg{ width:11px;height:11px; margin-left:3px; vertical-align:-1px; color:var(--accent); flex:0 0 auto; }
+
+  details.disclose{ border:1px solid var(--line); border-radius:12px; background:var(--paper-raised); padding:2px 14px; }
+  details.disclose + details.disclose{ margin-top:8px; }
+  details.disclose summary{ cursor:pointer; list-style:none; padding:11px 0; font-size:13.5px; font-weight:600; color:var(--ink); display:flex; align-items:center; justify-content:space-between; }
+  details.disclose summary::-webkit-details-marker{ display:none; }
+  details.disclose summary .chev{ width:9px;height:9px; border-right:1.6px solid var(--ink-faint); border-bottom:1.6px solid var(--ink-faint); transform:rotate(-45deg); transition:transform .18s ease; flex:0 0 auto; }
+  details.disclose[open] summary .chev{ transform:rotate(45deg); }
+  details.disclose .disclose-body{ padding:0 0 14px; font-size:13px; line-height:1.6; color:var(--ink-soft); }
+
+  .stay-card{ border:1px solid var(--line); border-radius:14px; padding:14px 16px; background:var(--paper-raised); }
+  .stay-card .s-city{ font-size:11.5px; color:var(--ink-faint); margin-bottom:2px;}
+  .stay-card .s-name{ font-size:15px; font-weight:600; margin-bottom:6px; line-height:1.4;}
+  .stay-card .s-row{ font-size:13px; color:var(--ink-soft); display:flex; justify-content:space-between; gap:10px; padding:5px 0; border-top:1px solid var(--line); }
+  .stay-card .s-row:first-of-type{ border-top:none; padding-top:0; }
+  .stay-card .s-row b{ color:var(--ink); font-weight:600; }
+
+  .foot-note{ text-align:center; font-size:11.5px; color:var(--ink-faint); padding:20px 0 4px; }
+
+  .info-group{ margin-bottom:22px; }
+  .info-group h3{ font-size:12px; font-weight:700; letter-spacing:.03em; color:var(--ink-faint); margin:0 0 8px; }
+  .info-row{ display:flex; justify-content:space-between; gap:14px; padding:9px 0; border-top:1px solid var(--line); font-size:13.5px; }
+  .info-row:first-child{ border-top:none; }
+  .info-row .k{ color:var(--ink-soft); flex:0 0 auto; max-width:56%; }
+  .info-row .v{ color:var(--ink); text-align:right; font-weight:500; }
+
+  .hero-inner{ display:flex; flex-direction:column; align-items:center; text-align:center; padding:20px 4px 6px; }
+  .hero-kicker{ font-size:11px; letter-spacing:.14em; color:var(--ink-faint); margin-bottom:14px; }
+  .hero-title{ font-size:42px; line-height:1.18; font-weight:700; margin:0 0 12px; letter-spacing:.01em; }
+  .hero-dates{ font-size:13.5px; color:var(--accent); font-weight:600; letter-spacing:.06em; margin-bottom:26px; }
+  .hero-map{ width:100%; max-width:320px; height:auto; margin-bottom:8px; }
+  .hero-map .city-label{ font-size:9.5px; fill:var(--ink-faint); font-family:"Noto Sans TC",sans-serif; }
+  .hero-map .city-code{ font-size:10.5px; fill:var(--ink); font-weight:600; font-family:"Noto Sans TC",sans-serif; }
+  .hero-map .route-line{ stroke:var(--line); stroke-width:1.4; stroke-dasharray:3 4; }
+  .hero-map .route-dot{ fill:var(--paper-raised); stroke:var(--accent); stroke-width:1.6; }
+  .hero-stats{ display:flex; gap:30px; margin:22px 0 26px; }
+  .hero-stats .stat{ display:flex; flex-direction:column; align-items:center; }
+  .hero-stats .stat b{ font-family:"Noto Serif TC",serif; font-size:23px; font-weight:700; color:var(--ink); line-height:1.2; }
+  .hero-stats .stat span{ font-size:10.5px; color:var(--ink-faint); margin-top:2px; }
+  .hero-divider{ width:34px; height:1px; background:var(--line); margin:0 0 22px; }
+  .hero-route{ font-size:12.5px; color:var(--ink-soft); line-height:1.9; padding:0 10px; margin-bottom:28px; }
+  .hero-cta{
+    border:none; background:var(--ink); color:var(--paper); padding:13px 30px; border-radius:100px; font-size:14px; font-weight:600;
+    font-family:"Noto Sans TC",sans-serif; letter-spacing:.02em; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+  }
+  .hero-cta:active{ opacity:.8; }
+  .hero-cta svg{ width:14px; height:14px; }
+
+  @media (min-width:481px){ .app{ border-left:1px solid var(--line); border-right:1px solid var(--line); } }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="masthead">
+    <div class="kicker">TRAVEL ITINERARY</div>
+    <h1 class="serif">加拿大東部十九日</h1>
+    <div class="range">2026.09.28 — 10.16　溫哥華・維多利亞・蒙特婁・魁北克・多倫多・尼加拉瀑布</div>
+  </div>
+
+  <div class="rail-wrap">
+    <div class="rail" id="rail"></div>
+    <div class="subnav">
+      <button class="navbtn" id="prevBtn" aria-label="前一天">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="progress-text" id="progressText"></div>
+      <button class="navbtn" id="nextBtn" aria-label="下一天">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="content" id="content"></div>
+
+</div>
+
+<script>
+const ICONS = {
+  plane: `<svg viewBox="0 0 24 24" fill="none"><path d="M10.5 14.5L4 12.7c-.6-.2-.6-1 0-1.3l1.6-.8 6 1.5 3-3-8-4 1.7-1.2c.4-.3.9-.3 1.3 0l9 5.6 3.6-1c1-.3 2 .6 1.7 1.6l-1 3.6-9 5.6-2.5 3-1.6.4-.4-3.3 2.5-3z" fill="currentColor"/></svg>`,
+  train: `<svg viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M6 12h12M9 17l-2 3M15 17l2 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="8" r=".9" fill="currentColor"/><circle cx="15" cy="8" r=".9" fill="currentColor"/></svg>`,
+  car: `<svg viewBox="0 0 24 24" fill="none"><path d="M4 16l1.2-5.2A2 2 0 017.1 9.3h9.8a2 2 0 011.9 1.5L20 16" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="3" y="16" width="18" height="4" rx="1.4" stroke="currentColor" stroke-width="1.8"/><circle cx="7.5" cy="20" r="1.3" fill="currentColor"/><circle cx="16.5" cy="20" r="1.3" fill="currentColor"/></svg>`,
+  boat: `<svg viewBox="0 0 24 24" fill="none"><path d="M4 15l1.5 4.2a2 2 0 001.9 1.3h9.2a2 2 0 001.9-1.3L20 15H4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 15V6h5l3 5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 6H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  walk: `<svg viewBox="0 0 24 24" fill="none"><circle cx="13" cy="4.5" r="1.6" fill="currentColor"/><path d="M10 22l1.5-6-2-2 .7-5 3-1.2 2.6 2.4 2.7 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5 14l-3 2-2 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  pin: `<svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.7 7-12a7 7 0 10-14 0c0 5.3 7 12 7 12z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" stroke="currentColor" stroke-width="1.8"/></svg>`,
+  bed: `<svg viewBox="0 0 24 24" fill="none"><path d="M3 18v-8a2 2 0 012-2h14a2 2 0 012 2v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M3 15h18M3 18l-1 3M21 18l1 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5 10V8a2 2 0 012-2h3a2 2 0 012 2v2M13 10V9a2 2 0 012-2h2a2 2 0 012 2v1" stroke="currentColor" stroke-width="1.8"/></svg>`,
+  cart: `<svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="20" r="1.3" fill="currentColor"/><circle cx="17" cy="20" r="1.3" fill="currentColor"/><path d="M3 4h2l2.2 11.2a2 2 0 002 1.6h7.4a2 2 0 002-1.6L20 8H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  food: `<svg viewBox="0 0 24 24" fill="none"><path d="M7 3v7a2 2 0 002 2v9M7 3v7M9 3v7M7 10h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 3c-1.7 0-3 2-3 5s1.3 5 3 5v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  note: `<svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l3 3v15H6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M15 3v3h3M9 12h6M9 16h6M9 8h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  extlink: `<svg viewBox="0 0 24 24" fill="none"><path d="M14 5h5v5M19 5l-8 8M8 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+};
+
+function mapsUrl(q){ return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q); }
+function renderSights(sights){
+  if(!sights) return '';
+  if(typeof sights === 'string'){
+    const arr = items(sights);
+    if(!arr.length) return '';
+    return `<section class="block"><h3>${ICONS.pin}今日重點</h3><ul class="list">${arr.map(t=>`<li>${t}</li>`).join('')}</ul></section>`;
+  }
+  if(!sights.length) return '';
+  return `<section class="block"><h3>${ICONS.pin}今日重點</h3><ul class="list">${sights.map(s=>
+    s.q ? `<li><a class="maplink" href="${mapsUrl(s.q)}" target="_blank" rel="noopener">${s.t}${ICONS.extlink}</a></li>` : `<li>${s.t}</li>`
+  ).join('')}</ul></section>`;
+}
+
+function items(str){
+  if(!str) return [];
+  return str.split('@').map(s=>s.trim()).filter(Boolean);
+}
+function modeIcon(mode){ return ICONS[mode] || ICONS.pin; }
+function modeLabel(mode){ return {plane:'搭機',train:'搭火車',car:'租車',boat:'搭船',stay:'市區停留'}[mode] || '交通'; }
+
+/* turn a raw "@"-separated string into time / text rows for a table */
+function toTimeRows(raw){
+  const list = items(raw);
+  if(!list.length) return [];
+  return list.map(t=>{
+    const m = t.match(/\d{1,2}:\d{2}(?:\s*[\/~～\-–]\s*\d{1,2}:\d{2})*/);
+    if(m){
+      const time = m[0].replace(/\s+/g,'');
+      let text = (t.slice(0,m.index) + t.slice(m.index+m[0].length));
+      text = text.replace(/^[，,、\s：:]+|[，,、\s]+$/g,'').trim();
+      return {time, text: text || '—'};
+    }
+    return {time:'', text:t};
+  });
+}
+function renderTTable(rows){
+  if(!rows.length) return '';
+  return `<table class="ttable"><tbody>${rows.map(r=>`<tr><td class="tt-time">${r.time||'—'}</td><td class="tt-text">${r.text}</td></tr>`).join('')}</tbody></table>`;
+}
+function renderLegs(legs){
+  if(!legs || !legs.length) return '';
+  return `<table class="ttable"><tbody>${legs.map(l=>`<tr><td class="tt-time">${l.time||'—'}</td><td class="tt-place">${l.place}</td></tr>`).join('')}</tbody></table>`;
+}
+
+/* ============ DATA ============ */
+const OUTBOUND = {
+  title:'出發', heading:'台灣 → 溫哥華', sub:'2026.09.28　三段不同航班分批出發',
+  flights:[
+    {who:'吉偉', carrier:'長榮航空 → 加拿大航空', caption:'全程約 17h15m',
+      legs:[{time:'07:00',place:'高雄 KHH'},{time:'—',place:'成田 NRT（轉機，5h5m）'},{time:'09:15',place:'溫哥華 YVR'}]},
+    {who:'（本團）', carrier:'國泰航空 CX461 / CX810', caption:'全程約 15h35m',
+      legs:[{time:'12:00',place:'台北 TPE（第2航廈）'},{time:'15:55',place:'香港 HKG（轉機）'},{time:'12:35',place:'溫哥華 YVR'}]},
+    {who:'（本團）', carrier:'長榮航空 BR10', caption:'全程約 10h45m・直飛',
+      legs:[{time:'23:30',place:'台北 TPE（第2航廈）'},{time:'19:15',place:'溫哥華 YVR（國內航廈）'}]}
+  ]
+};
+const RETURN_TRIP = {
+  title:'返程', heading:'多倫多 → 台灣', sub:'2026.10.16　三段不同航班分批返程',
+  flights:[
+    {who:'（本團）', carrier:'國泰航空 CX829 / CX422', caption:'全程約 19h5m',
+      legs:[{time:'01:50',place:'多倫多 YYZ（第3航廈）'},{time:'07:10',place:'香港 HKG（轉機）'},{time:'08:55',place:'台北 TPE'}]},
+    {who:'（本團）', carrier:'長榮航空 BR35', caption:'全程約 15h55m・直飛',
+      legs:[{time:'01:45',place:'多倫多 YYZ（第1航廈）'},{time:'05:40',place:'台北 TPE'}]},
+    {who:'吉偉', carrier:'加拿大航空 → 國泰航空', caption:'全程約 25h40m・10/18 抵達',
+      legs:[{time:'20:30',place:'多倫多 YYZ'},{time:'—',place:'溫哥華 YVR（轉機，2h4m）'},{time:'—',place:'香港 HKG（轉機，3h20m）'},{time:'10:10',place:'高雄 KHH（10/18）'}]}
+  ]
+};
+
+const DAYS = [
+{ day:1, date:'9/28', weekday:'', city:'溫哥華', cityEn:'Vancouver', mode:'plane', holiday:null,
+  legs:null,
+  transportCaption:'搭乘航班抵達（詳見「出發」頁），長榮航班建議選右側靠窗 K 座欣賞溫哥華夜景',
+  prep:'@成人一日票（DayPass）CA12.55 @長者一日票優待票（Concession DayPass）CA9.75 @單程票可上車時現金投現、個人信用卡/Apple Pay 感應',
+  arrivalTransit:'《去飯店》@搭乘 Canada Line 往 Waterfront 方向，經 8 站（19 分鐘）在 Broadway-City Hall 下車，走路 16 分鐘抵達民宿，約 12 分鐘一班車 @或搭乘 Canada Line 往 Waterfront 方向，經 4 站（10 分鐘）在 Marine Drive 下車，走路 2 分鐘到 Marine Drive Bay 1 搭 #15 公車往 Cambie / Olympic Village Station 方向，在 NB Cambie St @ W 16 Ave 下車，走路 7 分鐘到民宿',
+  sights:'交通日＋調時差（比台灣慢 15 小時；夏令時間每年 3 月第 1 個週日凌晨 2 點起／冬令時間每年 11 月第 1 個週日凌晨 2 點起慢 16 小時）',
+  transit1:'@機場捷運 YVR Airport 站 → Waterfront 站（Canada Line 共 13 站），機場出發需多付 5 加幣稅 @溫哥華交通分三區（Zone 1-3），跨區按距離收費；平日晚上 6:30 後、週末及國定假日全區僅收 1 區費用，成人 CA3.5',
+  transit2:'',
+  stayCity:'溫哥華 Vancouver',
+  hotel:'A Peaceful Uptown Retreat - Easy Access Everywhere（公寓式民宿 2 房＋1 沙發床，住 4 晚）\n地址：163 W 15th Avenue, V5Y 1X8',
+  hotelQ:'163 W 15th Avenue, Vancouver, BC V5Y 1X8, Canada',
+  price:'CAD 1619.12 ≈ NT37,150（每人 NT1,857，不含早餐）',
+  note:'9/20 前免費取消（玲珍 Booking／台新卡付款）',
+  market:'@City Square Shopping Centre（週一～三 10:00–18:00，週四到 20:00）走路 11 分鐘 @Centrepoint Mall（週一～四 10:00–20:00）走路 10 分鐘 @Joti\'s NOFRILLS Vancouver 08:00–23:00 走路 13 分鐘，評價高',
+  food:'@麒麟＆釣魚台（港式飲茶） @金魚日式 @Black & Blue',
+  extra:'溫哥華當地人推薦的兩家港式飲茶：帝苑（列治文）／溫哥華皇朝'
+},
+{ day:2, date:'9/29', weekday:'（二）', city:'溫哥華', cityEn:'Vancouver', mode:'stay', holiday:null,
+  legs:null, transportCaption:'', prep:'', arrivalTransit:'',
+  sights:[
+    {t:'伊莉莎白王后公園 Queen Elizabeth Park', q:'Queen Elizabeth Park, Vancouver, BC, Canada'},
+    {t:'海濱車站 Waterfront Station', q:'Waterfront Station, Vancouver, BC, Canada'},
+    {t:'蒸氣鐘（整點報時）Gastown Steam Clock', q:'Gastown Steam Clock, Vancouver, BC, Canada'},
+    {t:'觀景台 Vancouver Lookout', q:'Vancouver Lookout, BC, Canada'},
+    {t:'郵輪碼頭 Canada Place Cruise Terminal', q:'Canada Place Cruise Ship Terminal, Vancouver, BC, Canada'},
+    {t:'水滴藝術 Drop Sculpture', q:'Drop Sculpture Vancouver Convention Centre, BC, Canada'},
+    {t:'聖母玫瑰教堂 Holy Rosary Cathedral', q:'Holy Rosary Cathedral, Vancouver, BC, Canada'},
+    {t:'加拿大廣場 Canada Place', q:'Canada Place, Vancouver, BC, Canada'},
+    {t:'溫哥華公共圖書館', q:'Vancouver Public Library Central Branch, BC, Canada'},
+    {t:'溫哥華美術館 Vancouver Art Gallery', q:'Vancouver Art Gallery, BC, Canada'},
+    {t:'北溫 Waterfront Park', q:'Waterfront Park, North Vancouver, BC, Canada'},
+    {t:'Lonsdale Quay', q:'Lonsdale Quay Market, North Vancouver, BC, Canada'}
+  ],
+  transit1:'@搭 SeaBus 到北溫看夕陽',
+  transit2:'',
+  stayCity:'溫哥華 Vancouver', hotel:'A Peaceful Uptown Retreat - Easy Access Everywhere（同 Day1 民宿）', hotelQ:'163 W 15th Avenue, Vancouver, BC V5Y 1X8, Canada', price:'同上', note:'',
+  market:'',
+  food:'@早餐：Oeb Brunch（Poutine 必點） @Tim Hortons（Timbits 甜甜圈） @Twisted Fork @Jerusalem Shawarma Vancouver（中東餐廳，評價極高）',
+  extra:'@T&T supermarket 大統華超市 @BETA 5 巧克力名店 @Steveston Pizza Company（Steveston Village, Richmond，有名海鮮 pizza）'
+},
+{ day:3, date:'9/30', weekday:'（三）', city:'溫哥華', cityEn:'Vancouver', mode:'stay', holiday:'國定假日・全國真相與和解日',
+  legs:null, transportCaption:'', prep:'', arrivalTransit:'',
+  sights:[
+    {t:'上午｜固蘭湖島 Granville Island', q:'Granville Island, Vancouver, BC, Canada'},
+    {t:'下午｜史丹利公園 Stanley Park', q:'Stanley Park, Vancouver, BC, Canada'},
+    {t:'圖騰柱 Totem Poles', q:'Totem Poles, Stanley Park, Vancouver, BC, Canada'},
+    {t:'Fisherman\'s Wharf', q:'Fisherman\'s Wharf, Vancouver, BC, Canada'}
+  ],
+  transit1:'固蘭湖島：@民宿走路 25 分鐘到 The Village 碼頭，搭 9:30 False Creek Ferry 往 Granville Island 方向，9:49 在 Granville Island Ferry Dock 下船（航程 19 分鐘）',
+  transit2:'史丹利公園：@從固蘭湖島走路 11 分鐘到南端 WB W 5th Ave @ Granville St 站搭 14:11 #004 公車往 Powell 方向，14:22 在 NB Seymour St @ Robson St 下車 @走路 4 分鐘到 West Georgia St & Seymour St 站搭 14:30 #250 公車往 th & Marine 方向，14:35 在 WB W Georgia St @ Denman St 下車，租腳踏車進史丹利公園（園內請逆時鐘方向騎行）',
+  stayCity:'溫哥華 Vancouver', hotel:'A Peaceful Uptown Retreat - Easy Access Everywhere（同 Day1 民宿）', hotelQ:'163 W 15th Avenue, Vancouver, BC V5Y 1X8, Canada', price:'同上',
+  note:'住宿走路 20 分鐘（可經超市）—碼頭 The Village Dock 搭船—固蘭湖島 Granville Island Dock（CA8.5 單程）',
+  market:'',
+  food:'固蘭湖島：@Raisu 日本餐廳（需訂位） @Lee\'s Donuts @A la mode 酥皮濃湯',
+  extra:'@暖暮拉麵 @Coffee Medina 法式早午餐（米其林名店）'
+},
+{ day:4, date:'10/1', weekday:'（四）', city:'維多利亞', cityEn:'Victoria (day trip)', mode:'boat', holiday:null,
+  legs:[{time:'08:00 / 09:00',place:'Tsawwassen 渡輪碼頭 出發'},{time:'—',place:'Swartz Bay 渡輪碼頭 抵達'}],
+  transportCaption:'BC Ferries　單程 CA22.5／來回 CA44.1｜去程 07:00 後每小時 1 班，回程 19:00 / 21:00（開船前 30–60 分鐘報到）',
+  prep:'渡輪 bcferries.com｜巴士 bctransit.com/victoria｜布查德花園 butchartgardens.com',
+  arrivalTransit:'',
+  sights:[
+    {t:'布查德花園 The Butchart Gardens', q:'The Butchart Gardens, Victoria, BC, Canada'},
+    {t:'費爾蒙帝后飯店 Fairmont Empress', q:'Fairmont Empress Hotel, Victoria, BC, Canada'},
+    {t:'維多利亞港（Inner Harbour）', q:'Victoria Inner Harbour, BC, Canada'},
+    {t:'漁人碼頭 Fisherman\'s Wharf', q:'Fisherman\'s Wharf, Victoria, BC, Canada'},
+    {t:'議會大廈 BC Parliament Buildings', q:'British Columbia Parliament Buildings, Victoria, BC, Canada'}
+  ],
+  transit1:'去程：@在 Broadway-City Hall 搭 6:30 / 7:09 Canada Line，6:42 / 7:21 到 Bridgeport 站（車程 12 分鐘） @轉搭 6:58 / 7:43 的 620 號公車，7:34 / 8:19 到 Tsawwassen BC Ferry Terminal（車程 40 分鐘） @搭 8:00 / 9:00 渡輪，抵 Swartz Bay 後轉搭 10:03 / 11:00 #81 公車，11:02 / 12:00 到 Butchart Gardens 下車走 4 分鐘入園（預計停留 2.5–3 小時）',
+  transit2:'@在 Butchart Gardens 搭 14:31 / 13:02 #75 公車往 Downtown 方向，15:27 / 15:52 在 Legislature Exch (Belleville St) 下車，走路 3 分鐘到博物館及市中心 @回程：Douglas St at Blanchard St 搭 16:44 #72／17:16 #71／17:39 #70 往 Swartz Bay 方向，18:10–18:38 到 Swartz Bay Ferry Terminal（車程約 1 小時） @搭 19:00 渡輪賞日落',
+  stayCity:'溫哥華 Vancouver（當日往返）', hotel:'A Peaceful Uptown Retreat - Easy Access Everywhere（同 Day1 民宿）', hotelQ:'163 W 15th Avenue, Vancouver, BC V5Y 1X8, Canada', price:'同上',
+  note:'布查德花園 10/1–31 開放 09:00–16:00，票價 CA36.75（含稅）；維多利亞公車日票 CA6（上車感應信用卡，第一趟扣 CAD3，同天同卡累計滿 CAD6 後自動轉為 DayPass）',
+  market:'',
+  food:'維多利亞：@Blue Fox Cafe 早午餐 @Il Terrazzo 義大利菜 @Jam Cafe @Red Fish Blue Fish 炸魚薯條',
+  extra:''
+},
+{ day:5, date:'10/2', weekday:'（五）', city:'蒙特婁', cityEn:'Vancouver → Montreal', mode:'plane', holiday:null,
+  legs:[{time:'09:05',place:'溫哥華 YVR'},{time:'16:54',place:'蒙特婁 YUL'}],
+  transportCaption:'加拿大航空・約 4h49m・約 NT10,711（含行李）',
+  prep:'',
+  arrivalTransit:'《去機場》@搭乘 Canada Line 6:21 / 6:27 往 YVR-Airport 方向，經 8 站（19 分鐘）在 YVR-Airport 下車，走路 8 分鐘抵達國內航廈出境口，約 6 分鐘一班車',
+  sights:'蒙特婁比溫哥華快 3 小時 @蒙特婁中央車站 Gare Centrale @隔天可寄放行李在飯店（免費），輕裝搭 VIA 前往魁北克，建議提早 1 小時到站 @魁北克車站 Gare du Palais',
+  transit1:'《去飯店》@出機場走 4 分鐘到 YUL Airport-Trudeau 搭 #747 機場巴士 17:36 / 17:42（13 分鐘一班），往 Gare d\'autocars de Montreal 方向，經 11 站（約 49 分鐘）在 Rene-Levesque / Berri 下車，旁邊就是飯店',
+  transit2:'#747 機場巴士票價 CA11.25（無敬老優惠），包含 24 小時內無限次搭乘蒙特婁市區地鐵＋公車。機場大廳靠近 Door 28 巴士出口附近有藍白色 STM 自動售票機，選購 [YUL Aéroport / 24-hr Pass, All Modes A]，可刷卡付款並印出感應卡；沿指標從 Door 28 出口走即可看到 #747 站牌',
+  stayCity:'蒙特婁 Montreal', hotel:'Hotel Le Roverval（1 間 2 人房＋1 間 3 人房）', hotelQ:'Hotel Le Roverval, Montreal, QC, Canada',
+  price:'CAD 430.94 ≈ NT9,884（每人 NT1,977，含早餐；每房小費 CAD2–5）',
+  note:'（玲瓏）7/6 Booking 已付款',
+  market:'@IGA Marché Verreault et Normandeau（07:00–23:00）走路 10 分鐘',
+  food:'', extra:''
+},
+{ day:6, date:'10/3', weekday:'（六）', city:'魁北克', cityEn:'Montreal → Quebec', mode:'train', holiday:null,
+  legs:[{time:'10:15',place:'蒙特婁 Gare Centrale'},{time:'13:48',place:'魁北克 Gare du Palais'}],
+  transportCaption:'VIA Train #624・約 3h33m・4 車廂 5C 5D 6C 6D / 7C',
+  prep:'票價 CA63.41（含 15% 稅）≈ CA72.92',
+  arrivalTransit:'《去車站》@飯店走路 3 分鐘到 Berri-UQAM 站搭地鐵「2」線 8:27 / 8:35 往 Station Cote-Vertu，經 4 站在 Bonaventure 站 8:32 / 8:41 下車，走路 3 分鐘到 Gare Centrale，車程約 9 分鐘，每 9 分鐘一班車',
+  sights:[
+    {t:'魁北克市政廳', q:'Hôtel de Ville de Québec, Quebec City, QC, Canada'},
+    {t:'聖母聖殿主教堂', q:'Notre-Dame de Québec Cathedral-Basilica, QC, Canada'},
+    {t:'魁北克城門', q:'Porte Saint-Louis, Quebec City, QC, Canada'},
+    {t:'兵器廣場 Place d\'Armes', q:'Place d\'Armes, Quebec City, QC, Canada'},
+    {t:'芳堤娜城堡 Château Frontenac', q:'Fairmont Le Château Frontenac, Quebec City, QC, Canada'},
+    {t:'魁北克商店街', q:'Rue du Petit-Champlain, Quebec City, QC, Canada'},
+    {t:'達費林平台 Terrasse Dufferin', q:'Terrasse Dufferin, Quebec City, QC, Canada'},
+    {t:'魁北克城堡要塞 La Citadelle', q:'La Citadelle de Québec, QC, Canada'},
+    {t:'老城區纜車 Funicular', q:'Old Quebec Funicular, QC, Canada'}
+  ],
+  transit1:'魁北克最主要的大眾交通工具是 RTC 營運的公車；大多路線行駛新城區，舊城裡的上城與下城多為行人徒步區',
+  transit2:'',
+  stayCity:'魁北克 Quebec',
+  hotel:'Les Immeubles Charlevoix - Le 760-504（民宿 2 房＋1 沙發床，住 3 晚）\n地址：760 Av. Honoré-Mercier, Québec',
+  hotelQ:'760 Av. Honoré-Mercier, Québec City, QC, Canada',
+  price:'CAD 1449.23 ≈ NT33,412（每人 NT2,227，不含早餐）',
+  note:'（玲瓏）7/8 Booking 已付款',
+  market:'@Marché Richelieu（週一～日 08:00–21:00）民宿走路 3 分鐘',
+  food:'@Cochon Dingue 魁北克好吃法國餐廳（小豬餐廳）', extra:''
+},
+{ day:7, date:'10/4', weekday:'（日）', city:'魁北克', cityEn:'Quebec', mode:'stay', holiday:null,
+  legs:null, transportCaption:'', prep:'', arrivalTransit:'',
+  sights:[
+    {t:'斷頸階梯 Escalier Casse-Cou', q:'Escalier Casse-Cou Breakneck Stairs, Quebec City, QC, Canada'},
+    {t:'小尚普蘭街＆壁畫', q:'Rue du Petit-Champlain, Quebec City, QC, Canada'},
+    {t:'皇家廣場 Place Royale', q:'Place Royale, Quebec City, QC, Canada'},
+    {t:'勝利之后聖母教堂', q:'Notre-Dame-des-Victoires Church, Quebec City, QC, Canada'},
+    {t:'魁北克大壁畫 Fresque des Québécois', q:'Fresque des Québécois, Quebec City, QC, Canada'},
+    {t:'聖誕紀念品店', q:'La Maison de Noël de Québec, QC, Canada'},
+    {t:'雨傘巷', q:'Ruelle des Parasols, Quebec City, QC, Canada'},
+    {t:'女王城堡公園（戰場公園）', q:'Parc des Champs-de-Bataille, Quebec City, QC, Canada'},
+    {t:'魁北克省議會大廈', q:'Parliament Building Hôtel du Parlement, Quebec City, QC, Canada'},
+    {t:'圖爾尼噴泉（晚上打燈夢幻）', q:'Fontaine de Tourny, Quebec City, QC, Canada'}
+  ],
+  transit1:'上下城之間主要連結車道為 Côte de la Montagne，從小香普蘭街登上斷頸階梯（L\'Escalier Casse-Cou）即可到達，或搭乘傾斜軌道車（Funiculaire）',
+  transit2:'下城入口在 Maison Louis-Jolliet 內；上城入口在都伏林步道上',
+  stayCity:'魁北克 Quebec', hotel:'Les Immeubles Charlevoix - Le 760-504（同 Day6 民宿）', hotelQ:'760 Av. Honoré-Mercier, Québec City, QC, Canada', price:'同上', note:'', market:'', food:'', extra:''
+},
+{ day:8, date:'10/5', weekday:'（一）', city:'魁北克近郊', cityEn:'Quebec (day trip)', mode:'car', holiday:null,
+  legs:[{time:'08:00',place:'Hertz 取車・44 Côte Du Palais'},{time:'17:00',place:'加油還車'}],
+  transportCaption:'租車 Toyota Camry・訂單 L6543528808・CAD163.77（≈NT3,840）',
+  prep:'聖安妮峽谷購票：canyonsa.qc.ca｜蒙特倫西瀑布公園購票：sepaq.com',
+  arrivalTransit:'民宿 7:40 出門，走路 10 分鐘到租車店',
+  sights:[
+    {t:'9:10–12:00｜聖安妮峽谷 Canyon Sainte-Anne（先預購門票）', q:'Canyon Sainte-Anne, Beaupré, QC, Canada'},
+    {t:'12:00–13:30｜午餐：聖安妮德博普雷小鎮', q:'Sainte-Anne-de-Beaupré, QC, Canada'},
+    {t:'13:30–14:30｜聖安妮聖母大教堂（免門票）', q:'Basilica of Sainte-Anne-de-Beaupré, QC, Canada'},
+    {t:'14:45–16:30｜蒙特倫西瀑布公園（先預購門票）', q:'Montmorency Falls Park, Quebec City, QC, Canada'}
+  ],
+  transit1:'', transit2:'',
+  stayCity:'魁北克 Quebec', hotel:'Les Immeubles Charlevoix - Le 760-504（同 Day6 民宿）', hotelQ:'760 Av. Honoré-Mercier, Québec City, QC, Canada', price:'同上', note:'', market:'', food:'', extra:''
+},
+{ day:9, date:'10/6', weekday:'（二）', city:'蒙特婁', cityEn:'Quebec → Montreal', mode:'train', holiday:null,
+  legs:[{time:'17:41',place:'魁北克 Gare du Palais'},{time:'21:00',place:'蒙特婁 Gare Centrale'}],
+  transportCaption:'VIA Train #29・約 3h19m・5 車廂 3C 3D 4C 4D / 5D',
+  prep:'票價 CA53（含 15% 稅）≈ CA60.95。抵達蒙特婁在售票機買單程票 CAD3.75 或 24 小時票 CAD11.25（All Modes A），首次感應起 24 小時內無限次搭乘',
+  arrivalTransit:'@魁北克民宿 11:00 退房 @《買多倫多 City Pass》購票官網 citypass.com/toronto',
+  sights:[
+    {t:'魁北克 Fortifications of Quebec National Historic Site（民宿走路 5 分鐘）', q:'Fortifications of Québec National Historic Site, QC, Canada'},
+    {t:'交通日／市區觀光／Opus 卡 3 日'},
+    {t:'蒙特婁中央車站 Gare Centrale', q:'Gare Centrale, Montreal, QC, Canada'},
+    {t:'蒙特婁地下城 RÉSO'}
+  ],
+  transit1:'《去飯店》@從 Gare Centrale 走路 4 分鐘到 Bonaventure 站（Le 1000 de la Gauchetière 進站，往「Montmorency」路標走），搭地鐵「2」21:20 / 21:26 / 21:32 往 Station Montmorency 方向，經 4 站在 Berri-UQAM 站下，走路 6 分鐘到飯店，車程約 14 分鐘，每 6 分鐘一班車',
+  transit2:'',
+  stayCity:'蒙特婁 Montreal', hotel:'Hotel Le Roverval', hotelQ:'Hotel Le Roverval, Montreal, QC, Canada',
+  price:'CAD 1137.45 ≈ NT26,513（1 間 2 臥室，住 4 晚）＋CAD 403.22 ≈ NT9,218（1 間 2 人房，住 3 晚），皆含早餐；每房小費 CAD2–5（當日有清掃）',
+  note:'（玲瓏）9/12 Booking 已付款；NT9,082＋136 手續費 已付款（玲珍中信卡）',
+  market:'@IGA Marché Verreault et Normandeau（07:00–23:00）走路 10 分鐘',
+  food:'@越南餐廳 Le Petit Sao（Vieux Montréal） @燻肉三明治 Schwartz\'s Deli', extra:''
+},
+{ day:10, date:'10/7', weekday:'（三）', city:'蒙特婁', cityEn:'Montreal', mode:'stay', holiday:null,
+  legs:null, transportCaption:'', prep:'《已購 20:00 門票》聖母院大教堂 AURA 燈光秀，購票平台 Fever', arrivalTransit:'',
+  sights:[
+    {t:'聖母世界之後主教堂', q:'Mary, Queen of the World Cathedral, Montreal, QC, Canada'},
+    {t:'市政廳 Hôtel de Ville', q:'Montreal City Hall, QC, Canada'},
+    {t:'歷史博物館 Château Ramezay', q:'Château Ramezay Museum, Montreal, QC, Canada'},
+    {t:'傑克卡迪爾廣場 Place Jacques-Cartier', q:'Place Jacques-Cartier, Montreal, QC, Canada'},
+    {t:'舊港區', q:'Old Port of Montreal, QC, Canada'},
+    {t:'Rue Saint-Paul 徒步區', q:'Rue Saint-Paul, Montreal, QC, Canada'},
+    {t:'孟斯庫爾市場 Bonsecours Market', q:'Bonsecours Market, Montreal, QC, Canada'},
+    {t:'聖母聖殿 Basilique Notre-Dame（AURA 燈光秀）', q:'Notre-Dame Basilica, Montreal, QC, Canada'}
+  ],
+  transit1:'@蒙特婁老城區港區夕陽＆夜景 @聖母聖殿 AURA 燈光秀',
+  transit2:'頂級精緻美食廣場：@Time Out Market Montréal（地鐵 McGill 站內，Montreal Eaton Centre） @Le Cathcart（地鐵 McGill／Bonaventure 站，Place Ville Marie）',
+  stayCity:'蒙特婁 Montreal', hotel:'Hotel Le Roverval', hotelQ:'Hotel Le Roverval, Montreal, QC, Canada', price:'同上', note:'', market:'',
+  food:'@Crew Collective & Café（世界最美咖啡廳） @Juliette & Chocolat（有名甜品店） @Fairmount Bagel（有名貝果） @Ben & Jerry\'s @St Viateur Bagel（人氣貝果店，需付現）',
+  extra:''
+},
+{ day:11, date:'10/8', weekday:'（四）', city:'蒙特婁近郊', cityEn:'Mont Tremblant (day trip)', mode:'car', holiday:null,
+  legs:[{time:'09:00',place:'Hertz 取車・Palais Des Congrès'},{time:'17:45',place:'加油還車'}],
+  transportCaption:'租車 Toyota Corolla・訂單 L65400434D3・CAD184.72（≈NT4,332）',
+  prep:'翠湖山莊全景纜車購票：tremblant.ca',
+  arrivalTransit:'事先下載離線地圖 @在 Rene-Levesque/Berri 搭 8:09 / 8:19 #445 往 Ouest 方向，經 5 站在 Rene-Levesque/Jeanne-Mance 站下車，走路 6 分鐘到 Hertz 租車。取車時記得向櫃檯確認超時還車、鑰匙 Drop box 位置及停車樓層區域',
+  sights:[
+    {t:'9:30–11:30｜蒙特川普朗渡假村 Mont Tremblant Pedestrian Village（免門票）', q:'Mont Tremblant Pedestrian Village, QC, Canada'},
+    {t:'11:45–12:45｜核心廣場 Place Saint-Bernard 午餐', q:'Place Saint-Bernard, Mont Tremblant, QC, Canada'},
+    {t:'13:00–14:30｜全景觀纜車＋山頂景觀台', q:'Mont Tremblant Panoramic Gondola, QC, Canada'},
+    {t:'14:30–15:30｜小鎮漫步＆必吃特色點心'}
+  ],
+  transit1:'', transit2:'',
+  stayCity:'蒙特婁 Montreal', hotel:'Hotel Le Roverval', hotelQ:'Hotel Le Roverval, Montreal, QC, Canada', price:'同上', note:'', market:'',
+  food:'@Ma Poule Mouillée（葡式有名烤雞） @Reuben\'s Restaurant Delicatessen（有名燻肉三明治）', extra:''
+},
+{ day:12, date:'10/9', weekday:'（五）', city:'蒙特婁', cityEn:'Montreal', mode:'stay', holiday:null,
+  legs:null, transportCaption:'',
+  prep:'@售票機買單程票或 24 小時票 CAD11.25（All Modes A），首次感應起 24 小時內無限次搭乘 @記得購買 10/15 尼加拉瀑布回多倫多的巴士＋火車票（gotransit.com）',
+  arrivalTransit:'',
+  sights:[
+    {t:'聖若瑟聖堂 Saint Joseph\'s Oratory', q:'Saint Joseph\'s Oratory of Mount Royal, Montreal, QC, Canada'},
+    {t:'蒙特婁美術館', q:'Montreal Museum of Fine Arts, QC, Canada'},
+    {t:'蒙特婁地下城 RÉSO'},
+    {t:'16:00–18:30｜皇家山公園（落日美景）', q:'Mount Royal Park, Montreal, QC, Canada'}
+  ],
+  transit1:'@Habitat 67 棲息地 @蒙特婁地下城 RÉSO：聖凱薩琳街精華段／藝術廣場區／中央車站至複合廣場區 @皇家山觀景台：康迪亞隆克觀景台 Kondiaronk Belvedere @舊港的 La Grande Roue 摩天輪 @市中心夜生活：新月街 Crescent Street 或聖洛朗大道',
+  transit2:'',
+  stayCity:'蒙特婁 Montreal', hotel:'Hotel Le Roverval／Hotel Labelle', hotelQ:'Hotel Le Roverval, Montreal, QC, Canada', hotelQ2:'Hotel Labelle, Montreal, QC, Canada',
+  price:'Hotel Labelle（1 晚 1 間 2 人房）CAD 193.11 ≈ NT4,430（含早餐）',
+  note:'Hotel Labelle：9/9（玲珍）Booking／台新卡支付 NT4,430',
+  market:'', food:'', extra:''
+},
+{ day:13, date:'10/10', weekday:'（六）', city:'多倫多', cityEn:'Montreal → Toronto', mode:'train', holiday:null,
+  legs:[{time:'13:22',place:'蒙特婁 Gare Centrale'},{time:'18:45',place:'多倫多 Union Station'}],
+  transportCaption:'VIA Train #67・約 5h23m・5 車廂 6C 6D 7C 7D / 8D',
+  prep:'',
+  arrivalTransit:'《去車站》@飯店走路 3 分鐘到 Berri-UQAM 站搭地鐵「2」10:02 往 Station Cote-Vertu，經 4 站在 Bonaventure 站 10:07 下車，走路 3 分鐘到 Gare Centrale，車程約 9 分鐘，每 9 分鐘一班車',
+  sights:'交通日／市區觀光／Presto 卡 @多倫多市圖書館可免費領取 Presto 卡 @多倫多聯合車站 Union Station @多倫多地下城 PATH',
+  transit1:'《去民宿》@Union Station 走路 1 分鐘到 Bay St at Wellington St West 站搭 19:07 #19 公車往 Bay to Dupont 方向，經 11 站 19:25 在 Bay St at Wellesley St West 站下，走路 1 分鐘到民宿，車程約 25 分鐘',
+  transit2:'',
+  stayCity:'多倫多 Toronto', hotel:'Modern 1Bd&Den in Downtown Toronto（民宿 1 雙床＋1 單床＋1 沙發床，住 4 晚）\n地址：955 Bay St, M5S 0C6', hotelQ:'955 Bay St, Toronto, ON M5S 0C6, Canada',
+  price:'CAD 1456.97 ≈ NT33,324（每人 NT1,666，不含早餐）',
+  note:'9/9 前免費取消（玲珍 Booking／台新卡付款）',
+  market:'@Galleria Supermarket Express Wellesley（週一～日 08:00–22:00）走路 4 分鐘 @Loblaws Carlton Street（07:00–22:00）走路 10 分鐘，評價最高',
+  food:'@泰式餐廳 Pai（必吃） @Buster\'s Sea Cove 龍蝦堡', extra:''
+},
+{ day:14, date:'10/11', weekday:'（日）', city:'多倫多', cityEn:'Toronto', mode:'stay', holiday:null,
+  legs:null, transportCaption:'',
+  prep:'多倫多套票 City Pass（前 2 個固定＋後選 3 個）約 CA134.96：@加拿大國家電視塔（預約） @加拿大水族館 @皇家博物館（預約） @多倫多城市遊輪（預約） @凱撒羅馬城堡 @安大略美術館（預約） @多倫多動物園',
+  arrivalTransit:'',
+  sights:[
+    {t:'The Distillery Historic District（紅磚徒步區）', q:'Distillery Historic District, Toronto, ON, Canada'},
+    {t:'聖勞倫斯市場（週日營業至 17:00）', q:'St. Lawrence Market, Toronto, ON, Canada'},
+    {t:'狗狗噴泉公園 Berczy Park', q:'Berczy Park, Toronto, ON, Canada'},
+    {t:'布魯克菲爾廣場 Brookfield Place', q:'Brookfield Place, Toronto, ON, Canada'},
+    {t:'中心島 Centre Island', q:'Centre Island, Toronto, ON, Canada'},
+    {t:'沃德島 Ward\'s Island', q:'Ward\'s Island, Toronto, ON, Canada'},
+    {t:'Polson Pier Skyline Viewpoint', q:'Polson Pier, Toronto, ON, Canada'}
+  ],
+  transit1:'多倫多天際線＆夕陽：漢蘭角 Hanlan\'s Point，從 Union 車站後方的 Jack Layton Ferry Terminal 搭船約 10 分鐘到',
+  transit2:'',
+  stayCity:'多倫多 Toronto', hotel:'Modern 1Bd&Den in Downtown Toronto（同 Day13 民宿）', hotelQ:'955 Bay St, Toronto, ON M5S 0C6, Canada', price:'同上', note:'', market:'',
+  food:'@Mizzica 好吃義式冰淇淋', extra:''
+},
+{ day:15, date:'10/12', weekday:'（一）', city:'多倫多', cityEn:'Toronto', mode:'stay', holiday:'國定假日・感恩節 Thanksgiving',
+  legs:null, transportCaption:'', prep:'感恩節當日公家機關及部分大型商場停止營業', arrivalTransit:'',
+  sights:[
+    {t:'肯辛頓市場 Kensington Market', q:'Kensington Market, Toronto, ON, Canada'},
+    {t:'塗鴉巷 Graffiti Alley', q:'Graffiti Alley, Toronto, ON, Canada'},
+    {t:'新／舊市政廳 City Hall', q:'Toronto City Hall, ON, Canada'},
+    {t:'彌敦菲臘廣場 Nathan Phillips Square', q:'Nathan Phillips Square, Toronto, ON, Canada'},
+    {t:'中國城 Chinatown', q:'Chinatown, Toronto, ON, Canada'},
+    {t:'聖雅各座堂 St. James Cathedral', q:'St. James Cathedral, Toronto, ON, Canada'},
+    {t:'國家電視塔 CN Tower', q:'CN Tower, Toronto, ON, Canada'},
+    {t:'Trillium Park（欣賞天際線及夕陽）', q:'Trillium Park, Toronto, ON, Canada'},
+    {t:'王子之門 Prince\'s Gates', q:'Princes\' Gates, Toronto, ON, Canada'}
+  ],
+  transit1:'印度寺廟（有點遠，靠近多倫多國際機場附近）@車站內 Sky Walk 玻璃天橋可通電視塔、水族館，且靠近 UP Express',
+  transit2:'',
+  stayCity:'多倫多 Toronto', hotel:'Modern 1Bd&Den in Downtown Toronto（同 Day13 民宿）', hotelQ:'955 Bay St, Toronto, ON M5S 0C6, Canada', price:'同上', note:'', market:'', food:'', extra:''
+},
+{ day:16, date:'10/13', weekday:'（二）', city:'多倫多', cityEn:'Toronto', mode:'stay', holiday:null,
+  legs:null, transportCaption:'', prep:'', arrivalTransit:'',
+  sights:[
+    {t:'Casa Loma 城堡莊園', q:'Casa Loma, Toronto, ON, Canada'},
+    {t:'多倫多大學聖喬治主校區', q:'University of Toronto St. George Campus, ON, Canada'},
+    {t:'皇家安大略博物館 ROM', q:'Royal Ontario Museum, Toronto, ON, Canada'},
+    {t:'多倫多地下城 PATH'}
+  ],
+  transit1:'', transit2:'',
+  stayCity:'多倫多 Toronto', hotel:'Modern 1Bd&Den in Downtown Toronto（同 Day13 民宿）', hotelQ:'955 Bay St, Toronto, ON M5S 0C6, Canada', price:'同上', note:'', market:'', food:'', extra:''
+},
+{ day:17, date:'10/14', weekday:'（三）', city:'尼加拉瀑布', cityEn:'Toronto → Niagara Falls', mode:'train', holiday:null,
+  legs:[{time:'08:20',place:'多倫多 Union Station'},{time:'10:20',place:'VIA Rail Canada Station（尼加拉）'}],
+  transportCaption:'VIA Train #97・車站附近可寄放行李輕裝出遊',
+  prep:'多倫多車站寄放行李（07:00–24:00，需線上預約）：bagsaway.com／bounce.com（優惠碼 UNIKON）',
+  arrivalTransit:'抵達後：搭 #603 公車，在 Table Rock Centre 站下車',
+  sights:[
+    {t:'（詳見「尼加拉兩日遊」表）'},
+    {t:'後瀑布之旅 Journey Behind the Falls', q:'Journey Behind the Falls, Niagara Falls, ON, Canada'},
+    {t:'加拿大瀑布遊船 Niagara City Cruises', q:'Niagara City Cruises, Niagara Falls, ON, Canada'},
+    {t:'彩虹橋 Rainbow Bridge', q:'Rainbow Bridge, Niagara Falls, ON, Canada'},
+    {t:'觀瀑塔 Skylon Tower', q:'Skylon Tower, Niagara Falls, ON, Canada'},
+    {t:'發電廠＋隧道 Power Station + The Tunnel', q:'Niagara Parks Power Station, Niagara Falls, ON, Canada'}
+  ],
+  transit1:'今日重點：後瀑布之旅（Journey Behind the Falls）、加拿大瀑布遊船（Niagara City Cruises）',
+  transit2:'',
+  stayCity:'尼加拉瀑布 Niagara Falls', hotel:'Cannery Lofts Niagara（飯店，2 房＋1 沙發床，1 晚，附廚房設備）', hotelQ:'Cannery Lofts Niagara, Niagara Falls, ON, Canada',
+  price:'CAD 217.88 ≈ NT4,983（每人 NT996，不含早餐）',
+  note:'10/11 前免費取消（玲珍 Booking／台新卡付款）',
+  market:'', food:'@Skylon Tower 觀瀑塔用餐', extra:''
+},
+{ day:18, date:'10/15', weekday:'（四）', city:'尼加拉瀑布', cityEn:'Niagara Falls → Toronto Airport', mode:'plane', holiday:null,
+  legs:[{time:'22:00',place:'多倫多 Union Station（UP Express）'},{time:'22:28',place:'Pearson Station'},{time:'22:45',place:'機場出境大廳報到'}],
+  transportCaption:'本團 10/16 凌晨紅眼班機（詳見「返程」頁），建議選左側靠窗 A 座看極光，10/17 抵達台灣。UP Express 每 15 分鐘一班，車程約 35 分鐘',
+  prep:'市區 PRESTO 卡通用於地鐵、街車（Streetcar）和巴士（TTC）',
+  arrivalTransit:'《回多倫多聯合車站》@Niagara Falls GO #12B 巴士 15:45 → Burlington GO 16:55（1h10m） @轉搭 #LW 火車 17:10 → Union Station GO 18:15（1h5m）',
+  sights:[
+    {t:'（詳見「尼加拉兩日遊」表）'},
+    {t:'白水步道 White Water Walk', q:'White Water Walk, Niagara Falls, ON, Canada'},
+    {t:'漩渦空中纜車 Whirlpool Aero Car', q:'Whirlpool Aero Car, Niagara Falls, ON, Canada'},
+    {t:'雲嶺酒莊 Inniskillin Wines', q:'Inniskillin Wines, Niagara-on-the-Lake, ON, Canada'},
+    {t:'尼加拉濱湖小鎮 Niagara-on-the-Lake', q:'Niagara-on-the-Lake, ON, Canada'}
+  ],
+  transit1:'', transit2:'',
+  stayCity:'多倫多 Toronto',
+  hotel:'吉偉住宿：Victoria\'s Mansion Guest House（勝利大廈賓客酒店）16:00–18:00 入住／11:00 退房',
+  hotelQ:'Victoria\'s Mansion Guest House, Toronto, ON, Canada',
+  price:'CAD 166.49 ≈ NT3,895（不含早餐）',
+  note:'10/12 前免費取消（玲珍 Booking／聯邦卡 10/12 扣款）',
+  market:'',
+  food:'濱湖尼加拉鎮：@噴泉華園餐廳 @Cows（加拿大 NO.1 冰淇淋）',
+  extra:'保健食品可買：健美生 Jamieson、Webber Naturals'
+},
+{ day:19, date:'10/16', weekday:'（五）', city:'多倫多', cityEn:'Toronto — 吉偉延後一天', mode:'plane', holiday:null,
+  legs:null,
+  transportCaption:'僅吉偉此日搭機，17:30 前需抵達機場（其餘團員已於 10/15 夜間出發，詳見「返程」頁）',
+  prep:'', arrivalTransit:'', sights:'', transit1:'', transit2:'',
+  stayCity:'', hotel:'', price:'', note:'', market:'', food:'', extra:''
+}
+];
+
+const INFO_GROUPS = [
+  { title:'匯率／稅金／小費', rows:[
+    ['匯率參考','CA 1 ≈ NT 23'],
+    ['消費稅','溫哥華 12%　卡加立 5%　多倫多 13%'],
+    ['餐廳小費','至少 15% 以上']
+  ]},
+  { title:'機票費用（每人）', rows:[
+    ['玲珍','NT36,755（長榮直飛四段票）'],
+    ['玲瓏','NT33,551（長榮直飛四段票）'],
+    ['吉偉','NT28,264（含手續費／長榮＋加拿大航空＋國泰）'],
+    ['溫哥華→蒙特婁','NT10,711（加拿大航空，約 5h，含行李）']
+  ]},
+  { title:'國鐵 VIA 車票', rows:[
+    ['參考票價','約 NT7,063／位'],
+    ['10/3 蒙特婁→魁北克','CA63.41（含稅 15%）≈ CA72.92'],
+    ['10/6 魁北克→蒙特婁','CA53（含稅 15%）≈ CA60.95'],
+    ['10/10 蒙特婁→多倫多','CA94.62（含稅 15%）≈ CA108.78＋大行李 CA20'],
+    ['10/14 多倫多→尼加拉','CA26（含稅 13%）≈ CA29.38']
+  ]},
+  { title:'租車', rows:[
+    ['10/5 Hertz 取車 08:00','CAD163.77（訂單 L6543528808）'],
+    ['10/8 Hertz 取車 09:00','CAD184.72（訂單 L65400434D3）']
+  ]},
+  { title:'各城市交通卡', rows:[
+    ['溫哥華 Compass 卡','押金 CA6（可退可儲值）／一日票 CA11.95（敬老 CA9.4）'],
+    ['維多利亞公車一日票','CA6（可刷卡／現金，車上購買 One Day Pass）'],
+    ['溫哥華彩虹船到固蘭湖島','CA8.5（單程）'],
+    ['蒙特婁機場→市區 #747','約 40 分鐘，24 小時內每 15 分一班，CA11.25'],
+    ['蒙特婁 Opus 卡（3 日）','CA21.75（敬老 CA13，不可儲值，依專案售）'],
+    ['多倫多','Presto 卡']
+  ]},
+  { title:'主要門票', rows:[
+    ['維多利亞港渡輪（單程）','CA22.05／07:00–21:00 每小時 1 班'],
+    ['布查德花園（10 月起）','CA36.75（無敬老票）'],
+    ['蒙特婁聖母聖殿 AURA 光雕秀','CA38.47（敬老 CA33.47，含稅）'],
+    ['多倫多 City Pass（5 個景點）','CA134.96'],
+    ['尼加拉瀑布套票','CA129']
+  ]}
+];
+
+/* ============ build pages ============ */
+const pages = [];
+pages.push({type:'home'});
+pages.push({type:'flight', data:OUTBOUND});
+DAYS.forEach(d=>pages.push({type:'day', data:d}));
+pages.push({type:'flight', data:RETURN_TRIP});
+pages.push({type:'info'});
+
+let current = 0;
+
+const rail = document.getElementById('rail');
+function railLabel(p){
+  if(p.type==='home') return `<span class="p-num">HOME</span>首頁`;
+  if(p.type==='flight') return `<span class="p-num">${p.data.title==='出發'?'START':'END'}</span>${p.data.title}`;
+  if(p.type==='info') return `<span class="p-num">INFO</span>資訊`;
+  return `<span class="p-num">D${String(p.data.day).padStart(2,'0')}</span>${p.data.date}`;
+}
+pages.forEach((p,i)=>{
+  const el = document.createElement('div');
+  el.className = 'pill';
+  el.dataset.idx = i;
+  el.innerHTML = railLabel(p);
+  el.addEventListener('click', ()=>go(i));
+  rail.appendChild(el);
+});
+
+const content = document.getElementById('content');
+
+function sectionList(label, iconKey, raw){
+  const arr = items(raw);
+  if(!arr.length) return '';
+  return `<section class="block"><h3>${ICONS[iconKey]||''}${label}</h3><ul class="list">${arr.map(t=>`<li>${t}</li>`).join('')}</ul></section>`;
+}
+
+function renderHome(){
+  return `
+  <div class="page hero">
+    <div class="hero-inner">
+      <div class="hero-kicker">TRAVEL ITINERARY · CANADA</div>
+      <h1 class="serif hero-title">加拿大<br>東部十九日</h1>
+      <div class="hero-dates">2026.09.28 — 10.18</div>
+      <svg class="hero-map" viewBox="0 0 320 90" xmlns="http://www.w3.org/2000/svg">
+        <line class="route-line" x1="18" y1="45" x2="302" y2="45"/>
+        ${[['18','溫哥華','VAN'],['76','維多利亞','VIC'],['150','蒙特婁','YUL'],['196','魁北克','YQB'],['250','多倫多','YYZ'],['302','尼加拉','NIA']].map(([x,name,code])=>`
+          <circle class="route-dot" cx="${x}" cy="45" r="4.5"/>
+          <text class="city-code" x="${x}" y="34" text-anchor="middle">${code}</text>
+          <text class="city-label" x="${x}" y="62" text-anchor="middle">${name}</text>
+        `).join('')}
+      </svg>
+      <div class="hero-stats">
+        <div class="stat"><b>19</b><span>天數</span></div>
+        <div class="stat"><b>6</b><span>城市</span></div>
+        <div class="stat"><b>4</b><span>交通方式</span></div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-route">溫哥華 → 維多利亞（當日往返）→ 蒙特婁 → 魁北克 → 蒙特婁 → 多倫多 → 尼加拉瀑布</div>
+      <button class="hero-cta" id="startBtn">開始查看行程<svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>`;
+}
+
+function renderFlightPage(p){
+  const d = p.data;
+  return `
+  <div class="page">
+    <div class="day-head">
+      <div class="d-num">${d.title.toUpperCase()}</div>
+      <h2 class="serif">${d.heading}</h2>
+      <div class="d-meta"><span class="tag plain">${d.sub}</span></div>
+    </div>
+    ${d.flights.map(f=>`
+      <div class="ticket">
+        <div class="ticket-row">
+          <div class="ticket-icon">${ICONS.plane}</div>
+          <div class="ticket-main">
+            <div class="t-title">${f.who}　${f.carrier}</div>
+            <div class="t-sub">${f.caption}</div>
+          </div>
+        </div>
+        ${renderLegs(f.legs)}
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function renderInfoPage(){
+  return `
+  <div class="page">
+    <div class="day-head">
+      <div class="d-num">REFERENCE</div>
+      <h2 class="serif">實用資訊</h2>
+      <div class="d-meta"><span class="tag plain">匯率・交通卡・門票・租車費用</span></div>
+    </div>
+    ${INFO_GROUPS.map(g=>`
+      <div class="info-group">
+        <h3>${g.title}</h3>
+        ${g.rows.map(r=>`<div class="info-row"><div class="k">${r[0]}</div><div class="v">${r[1]}</div></div>`).join('')}
+      </div>
+    `).join('')}
+    <div class="foot-note">路線與票價僅供出發前參考，實際請以現場公告為準</div>
+  </div>`;
+}
+
+function renderDayPage(p){
+  const d = p.data;
+  const hasTransitDetail = d.arrivalTransit || d.transit1 || d.transit2;
+  const isTravel = d.mode !== 'stay';
+
+  let html = `<div class="page">
+    <div class="day-head">
+      <div class="d-num">DAY ${String(d.day).padStart(2,'0')} 　${d.date}${d.weekday}</div>
+      <h2 class="serif">${d.city}</h2>
+      <div class="d-meta">
+        <span class="tag">${d.cityEn}</span>
+        ${d.holiday?`<span class="tag plain">${d.holiday}</span>`:''}
+      </div>
+    </div>`;
+
+  if(isTravel && (d.legs || d.transportCaption)){
+    html += `
+    <div class="ticket">
+      <div class="ticket-row">
+        <div class="ticket-icon">${modeIcon(d.mode)}</div>
+        <div class="ticket-main">
+          <div class="t-title">${modeLabel(d.mode)}</div>
+          ${d.transportCaption?`<div class="t-sub">${d.transportCaption}</div>`:''}
+        </div>
+      </div>
+      ${renderLegs(d.legs)}
+      ${d.prep? `<div class="ticket-extra"><ul>${items(d.prep).map(t=>`<div>・${t}</div>`).join('')}</ul></div>`:''}
+    </div>`;
+  } else if(d.prep){
+    html += `<div class="ticket"><div class="ticket-extra" style="margin-top:0;padding-top:0;border-top:none;">${items(d.prep).map(t=>`<div>・${t}</div>`).join('')}</div></div>`;
+  }
+
+  html += renderSights(d.sights);
+
+  if(hasTransitDetail){
+    html += `<section class="block"><h3>${ICONS.walk}交通指南</h3>`;
+    if(d.arrivalTransit){
+      html += `<details class="disclose"><summary>抵達交通 <span class="chev"></span></summary><div class="disclose-body">${renderTTable(toTimeRows(d.arrivalTransit))}</div></details>`;
+    }
+    if(d.transit1 || d.transit2){
+      const combined = [d.transit1, d.transit2].filter(Boolean).join('@');
+      html += `<details class="disclose"><summary>景點間交通 <span class="chev"></span></summary><div class="disclose-body">${renderTTable(toTimeRows(combined))}</div></details>`;
+    }
+    html += `</section>`;
+  }
+
+  if(d.hotel){
+    let nameHtml = d.hotel.replace(/\n/g,'<br>');
+    if(d.hotelQ2){
+      const parts = d.hotel.split('／');
+      if(parts.length===2){
+        nameHtml = `<a class="maplink" href="${mapsUrl(d.hotelQ)}" target="_blank" rel="noopener">${parts[0]}${ICONS.extlink}</a>／<a class="maplink" href="${mapsUrl(d.hotelQ2)}" target="_blank" rel="noopener">${parts[1]}${ICONS.extlink}</a>`;
+      }
+    } else if(d.hotelQ){
+      nameHtml = `<a class="maplink" href="${mapsUrl(d.hotelQ)}" target="_blank" rel="noopener">${nameHtml}${ICONS.extlink}</a>`;
+    }
+    html += `
+    <section class="block">
+      <h3>${ICONS.bed}住宿</h3>
+      <div class="stay-card">
+        <div class="s-city">${d.stayCity}</div>
+        <div class="s-name">${nameHtml}</div>
+        ${d.price?`<div class="s-row"><span>費用</span><b>${d.price}</b></div>`:''}
+        ${d.note?`<div class="s-row"><span>備註</span><b>${d.note}</b></div>`:''}
+      </div>
+    </section>`;
+  }
+
+  html += sectionList('生活機能', 'cart', d.market);
+  html += sectionList('美食推薦', 'food', d.food);
+  html += sectionList('小提醒', 'note', d.extra);
+
+  html += `</div>`;
+  return html;
+}
+
+function render(idx){
+  const p = pages[idx];
+  let html;
+  if(p.type==='home') html = renderHome();
+  else if(p.type==='flight') html = renderFlightPage(p);
+  else if(p.type==='info') html = renderInfoPage();
+  else html = renderDayPage(p);
+  content.innerHTML = html;
+
+  [...rail.children].forEach((el,i)=>{
+    el.classList.toggle('active', i===idx);
+    if(i===idx) el.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  });
+
+  document.getElementById('prevBtn').disabled = idx===0;
+  document.getElementById('nextBtn').disabled = idx===pages.length-1;
+  document.getElementById('progressText').textContent = `${idx+1} / ${pages.length}`;
+  content.scrollTop = 0;
+}
+
+function go(idx){
+  if(idx<0||idx>=pages.length) return;
+  current = idx;
+  render(current);
+}
+
+document.getElementById('prevBtn').addEventListener('click', ()=>go(current-1));
+document.getElementById('nextBtn').addEventListener('click', ()=>go(current+1));
+
+content.addEventListener('click', e=>{
+  if(e.target.closest('#startBtn')) go(1);
+});
+
+let touchStartX = null;
+content.addEventListener('touchstart', e=>{ touchStartX = e.touches[0].clientX; }, {passive:true});
+content.addEventListener('touchend', e=>{
+  if(touchStartX===null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if(Math.abs(dx) > 60){ if(dx < 0) go(current+1); else go(current-1); }
+  touchStartX = null;
+}, {passive:true});
+
+window.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight') go(current+1);
+  if(e.key==='ArrowLeft') go(current-1);
+});
+
+render(current);
+</script>
+</body>
+</html>
