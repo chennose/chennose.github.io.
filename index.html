@@ -326,10 +326,12 @@ const DAYS = [
     {t:'加拿大廣場 Canada Place', q:'Canada Place, Vancouver, BC, Canada'},
     {t:'溫哥華公共圖書館', q:'Vancouver Public Library Central Branch, BC, Canada'},
     {t:'溫哥華美術館 Vancouver Art Gallery', q:'Vancouver Art Gallery, BC, Canada'},
-    {t:'北溫 Waterfront Park', q:'Waterfront Park, North Vancouver, BC, Canada'},
-    {t:'Lonsdale Quay', q:'Lonsdale Quay Market, North Vancouver, BC, Canada'}
+    {t:'北溫｜Lonsdale Quay Market（室內市場品嚐點心）', q:'Lonsdale Quay Market, North Vancouver, BC, Canada'},
+    {t:'北溫｜The Shipyards（熱門休閒水岸園區）', q:'The Shipyards, North Vancouver, BC, Canada'},
+    {t:'北溫｜Burrard Dry Dock Pier', q:'Burrard Dry Dock Pier, North Vancouver, BC, Canada'},
+    {t:'北溫｜Waterfront Park', q:'Waterfront Park, North Vancouver, BC, Canada'}
   ],
-  transit1:'@搭 SeaBus 到北溫看夕陽',
+  transit1:'《北溫看夕陽》@從 Waterfront 總站進入，依 SeaBus 指示牌即可抵達碼頭（航程約 12 分鐘／每 15 分鐘 1 班），抵達北溫的 Lonsdale Quay 碼頭 @Lonsdale Quay Market（室內市場品嚐點心）／戶外廣場景觀平台可遠眺溫哥華市中心天際線與海灣風光 @The Shipyards（熱門休閒水岸園區） @Burrard Dry Dock Pier／Waterfront Park',
   transit2:'',
   stayCity:'溫哥華 Vancouver', hotel:'A Peaceful Uptown Retreat - Easy Access Everywhere（同 Day1 民宿）', hotelQ:'163 W 15th Avenue, Vancouver, BC V5Y 1X8, Canada', price:'同上', note:'',
   market:'',
@@ -341,7 +343,16 @@ const DAYS = [
   sights:[
     {t:'上午｜固蘭湖島 Granville Island', q:'Granville Island, Vancouver, BC, Canada'},
     {t:'下午｜史丹利公園 Stanley Park', q:'Stanley Park, Vancouver, BC, Canada'},
+    {t:'死海灣 Deadman\'s Island', q:'Deadman\'s Island, Stanley Park, Vancouver, BC, Canada'},
     {t:'圖騰柱 Totem Poles', q:'Totem Poles, Stanley Park, Vancouver, BC, Canada'},
+    {t:'展望角 Prospect Point', q:'Prospect Point, Stanley Park, Vancouver, BC, Canada'},
+    {t:'布洛克頓角燈塔 Brockton Point Lighthouse', q:'Brockton Point Lighthouse, Stanley Park, Vancouver, BC, Canada'},
+    {t:'史丹利公園花園 Stanley Park Garden', q:'Stanley Park Rose Garden, Vancouver, BC, Canada'},
+    {t:'潛水服少女雕像 Girl in a Wetsuit', q:'Girl in a Wetsuit statue, Stanley Park, Vancouver, BC, Canada'},
+    {t:'海堤步道 The Seawall', q:'Stanley Park Seawall, Vancouver, BC, Canada'},
+    {t:'沃許石 Siwash Rock', q:'Siwash Rock, Stanley Park, Vancouver, BC, Canada'},
+    {t:'失落潟湖 Lost Lagoon', q:'Lost Lagoon, Vancouver, BC, Canada'},
+    {t:'金禧噴泉 Golden Jubilee Fountain', q:'Jubilee Fountain, Stanley Park, Vancouver, BC, Canada'},
     {t:'Fisherman\'s Wharf', q:'Fisherman\'s Wharf, Vancouver, BC, Canada'}
   ],
   transit1:'固蘭湖島：@民宿走路 25 分鐘到 The Village 碼頭，搭 9:30 False Creek Ferry 往 Granville Island 方向，9:49 在 Granville Island Ferry Dock 下船（航程 19 分鐘）',
@@ -574,10 +585,15 @@ const DAYS = [
   stayCity:'多倫多 Toronto', hotel:'Modern 1Bd&Den in Downtown Toronto（同 Day13 民宿）', hotelQ:'955 Bay St, Toronto, ON M5S 0C6, Canada', price:'同上', note:'', market:'', food:'', extra:''
 },
 { day:17, date:'10/14', weekday:'（三）', city:'尼加拉瀑布', cityEn:'Toronto → Niagara Falls', mode:'train', holiday:null,
-  legs:[{time:'08:20',place:'多倫多 Union Station'},{time:'10:20',place:'VIA Rail Canada Station（尼加拉）'}],
-  transportCaption:'VIA Train #97・車站附近可寄放行李輕裝出遊',
-  prep:'多倫多車站寄放行李（07:00–24:00，需線上預約）：bagsaway.com／bounce.com（優惠碼 UNIKON）',
-  arrivalTransit:'抵達後：搭 #603 公車，在 Table Rock Centre 站下車',
+  legs:[
+    {time:'08:20',place:'多倫多 Union Station'},
+    {time:'10:20',place:'VIA Rail Canada Station（尼加拉）'},
+    {time:'10:54',place:'轉搭 #603 公車（Go/Via/Bus Station-South）'},
+    {time:'11:05',place:'Clifton Hill-South 下車，走路 16 分鐘到飯店'}
+  ],
+  transportCaption:'VIA Train #97，抵達後轉乘 #603 公車到飯店（車程約 30 分鐘），車站附近可寄放行李輕裝出遊',
+  prep:'',
+  arrivalTransit:'《去車站》@從民宿走路 14 分鐘到 Queen\'s Park 站，搭 6:34「1 號線」往 Finch 方向，6:40 抵達 Union Station @多倫多車站可寄放行李（07:00–24:00，需線上預約）：bagsaway.com／bounce.com（優惠碼 UNIKON）',
   sights:[
     {t:'（詳見「尼加拉兩日遊」表）'},
     {t:'後瀑布之旅 Journey Behind the Falls', q:'Journey Behind the Falls, Niagara Falls, ON, Canada'},
@@ -586,7 +602,7 @@ const DAYS = [
     {t:'觀瀑塔 Skylon Tower', q:'Skylon Tower, Niagara Falls, ON, Canada'},
     {t:'發電廠＋隧道 Power Station + The Tunnel', q:'Niagara Parks Power Station, Niagara Falls, ON, Canada'}
   ],
-  transit1:'今日重點：後瀑布之旅（Journey Behind the Falls）、加拿大瀑布遊船（Niagara City Cruises）',
+  transit1:'抵達尼加拉瀑布後：搭 #603 公車，在 Table Rock Centre 站下車',
   transit2:'',
   stayCity:'尼加拉瀑布 Niagara Falls', hotel:'Cannery Lofts Niagara（飯店，2 房＋1 沙發床，1 晚，附廚房設備）', hotelQ:'Cannery Lofts Niagara, Niagara Falls, ON, Canada',
   price:'CAD 217.88 ≈ NT4,983（每人 NT996，不含早餐）',
@@ -594,9 +610,9 @@ const DAYS = [
   market:'', food:'@Skylon Tower 觀瀑塔用餐', extra:''
 },
 { day:18, date:'10/15', weekday:'（四）', city:'尼加拉瀑布', cityEn:'Niagara Falls → Toronto Airport', mode:'plane', holiday:null,
-  legs:[{time:'22:00',place:'多倫多 Union Station（UP Express）'},{time:'22:28',place:'Pearson Station'},{time:'22:45',place:'機場出境大廳報到'}],
+  legs:[{time:'22:00',place:'多倫多 Union Station（UP Express）'},{time:'22:28',place:'Pearson Station'}],
   transportCaption:'本團 10/16 凌晨紅眼班機（詳見「返程」頁），建議選左側靠窗 A 座看極光，10/17 抵達台灣。UP Express 每 15 分鐘一班，車程約 35 分鐘',
-  prep:'市區 PRESTO 卡通用於地鐵、街車（Streetcar）和巴士（TTC）',
+  prep:'@搭第 1 航廈班機：22:28 抵達 Pearson Station 後走路 7 分鐘到第 1 航廈出境大廳 @搭第 3 航廈班機：22:28 抵達 Pearson Station 後走路 11 分鐘到 Terminal 1 站，轉搭 22:42 #900 巴士（往 Kipling Station 方向，經 1 站），22:45 在 Terminal 3 站下車 @市區 PRESTO 卡通用於地鐵、街車（Streetcar）和巴士（TTC）',
   arrivalTransit:'《回多倫多聯合車站》@Niagara Falls GO #12B 巴士 15:45 → Burlington GO 16:55（1h10m） @轉搭 #LW 火車 17:10 → Union Station GO 18:15（1h5m）',
   sights:[
     {t:'（詳見「尼加拉兩日遊」表）'},
